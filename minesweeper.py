@@ -1,12 +1,13 @@
-from settings import ROW_SIZE, COLUMN_SIZE
-from board import Board
+import collections
+import board
+import settings
 
 
 class Minesweeper:
     """ Gra Saper """
 
     def __init__(self):
-        self.board = Board()
+        self.board = board.Board()
         self.game_over = False
         self.win = False
 
@@ -16,20 +17,20 @@ class Minesweeper:
         while True:
             print("Podaj 2 liczby (oddzielone spacją):", end="")
             index_y, index_x = map(int, input().split())
-            index = (index_y - 1) * ROW_SIZE + index_x
-            if index in range(1, (ROW_SIZE * COLUMN_SIZE + 1)):
+            index = (index_y - 1) * settings.ROW_SIZE + index_x
+            if 1 <= index <= settings.ROW_SIZE * settings.COLUMN_SIZE:
                 return index - 1
             else:
-                print("{} Wejście jest niepoprawne. Spróbuj jeszcze raz!".format(index_y, index_x))
+                print("Wejście: {} {} jest niepoprawne. Spróbuj jeszcze raz!".format(index_y, index_x))
 
     def make_move(self, index):
-        status = self.board.check_cell(index)
-        if status['is_bomb']:
+        current_state = self.board.check_cell(index)
+        if current_state.is_bomb == 'True':
             return True
-        elif not status['is_covered']:
+        elif current_state.is_covered == 'False':
             print("Ta komórka jest juz odkryta. Spróbuj ponownie!")
             return False
-        if status['is_board_empty']:
+        if current_state.is_board_empty == 'True':
             self.win = True
             return True
 
@@ -47,7 +48,7 @@ class Minesweeper:
         if self.win:
             print("Wygrałeś, gratulacje!")
         else:
-            print("Przegrałeś!")
+            print("Przegrałeś, trafiłeś na mine!")
 
     def run(self):
         self.game()

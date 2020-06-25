@@ -1,10 +1,12 @@
-from minesweeper import Minesweeper
+import minesweeper
 
 
 def main():
-    game = Minesweeper()
+    game = minesweeper.Minesweeper()
     game.run()
 
 
 if __name__ == "__main__":
+    NUMBER_OF_BOMBS = (20*10) // 10
+    print(NUMBER_OF_BOMBS)
     main()
