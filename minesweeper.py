@@ -25,12 +25,12 @@ class Minesweeper:
 
     def make_move(self, index):
         current_state = self.board.check_cell(index)
-        if current_state.is_bomb == 'True':
+        if current_state.is_bomb:
             return True
-        elif current_state.is_covered == 'False':
+        elif not current_state.is_covered:
             print("Ta komórka jest juz odkryta. Spróbuj ponownie!")
             return False
-        if current_state.is_board_empty == 'True':
+        if current_state.is_board_empty:
             self.win = True
             return True
 

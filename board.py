@@ -3,6 +3,8 @@ import collections
 import colorama
 import settings
 
+CellState = collections.namedtuple('CellState', ['is_bomb', 'is_covered', 'is_board_empty'])
+
 
 class Cell:
     """ Pojedyncza komórka planszy."""
@@ -88,15 +90,14 @@ class Board:
 
     def check_cell(self, index):
         """ Sprawdzanie czy komórka zawiera minę. """
-        current_state = collections.namedtuple('current_state', ['is_bomb', 'is_covered', 'is_board_empty'])
-        status = current_state('False', 'True', 'False')
+        status = CellState(False, True, False)
         if self.grid[index].is_bomb:
-            status = status._replace(is_bomb='True')
+            status = status._replace(is_bomb=True)
         if not self.grid[index].is_covered:
-            status = status._replace(is_covered='False')
+            status = status._replace(is_covered=False)
         self.uncover_board(index)
         if self.NUMBER_OF_FREE_TILES <= 0:
-            status = status._replace(is_board_empty='True')
+            status = status._replace(is_board_empty=True)
         return status
 
     def display_board(self):
