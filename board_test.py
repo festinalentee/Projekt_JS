@@ -9,27 +9,27 @@ class BoardTest(unittest.TestCase):
         test_board = board.Board()
         test_board.grid[1].is_bomb = True
         status = test_board.check_cell(1)
-        self.assertEqual(status.is_bomb, True)
+        self.assertTrue(status.is_bomb)
 
     def test_is_bomb_false(self):
         test_board = board.Board()
         test_board.grid[1].is_bomb = False
-        self.assertEqual(test_board.check_cell(1).is_bomb, False)
+        self.assertFalse(test_board.check_cell(1).is_bomb)
 
     def test_is_covered_true(self):
         test_board = board.Board()
         test_board.grid[5].is_covered = True
-        self.assertEqual(test_board.check_cell(5).is_covered, True)
+        self.assertTrue(test_board.check_cell(5).is_covered)
 
     def test_is_covered_false(self):
         test_board = board.Board()
         test_board.grid[5].is_covered = False
-        self.assertEqual(test_board.check_cell(5).is_covered, False)
+        self.assertFalse(test_board.check_cell(5).is_covered)
 
     def test_is_board_empty(self):
         test_board = board.Board()
         test_board.NUMBER_OF_FREE_TILES = 0
-        self.assertEqual(test_board.check_cell(5).is_board_empty, True)
+        self.assertTrue(test_board.check_cell(5).is_board_empty)
 
     def test_uncover_board_to_first_mine(self):
         test_board = board.Board()
