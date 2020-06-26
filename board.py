@@ -3,7 +3,7 @@ import collections
 import colorama
 import settings
 
-CellState = collections.namedtuple('CellState', ['is_bomb', 'is_covered', 'is_board_empty'])
+State = collections.namedtuple('State', ['is_bomb', 'is_covered', 'is_board_empty'])
 
 
 class Cell:
@@ -18,15 +18,15 @@ class Cell:
 class Board:
     """ Plansza do gry Saper."""
     def __init__(self):
-        self.NUMBER_OF_FREE_TILES = settings.NUMBER_OF_TILES - settings.NUMBER_OF_BOMBS
+        self.num_free_tiles = settings.NUM_TILES - settings.NUM_BOMBS
         self.grid = [Cell('-') for _ in range(settings.ROW_SIZE) for _ in range(settings.COLUMN_SIZE)]
         self.create_bombs()
         self.calculate_adjacent_bombs()
 
     def create_bombs(self):
         """ Umieszczanie min na losowych komórkach planszy. """
-        empty_positions = [i for i in range(settings.NUMBER_OF_TILES) if not self.grid[i].is_bomb]
-        bomb_positions = random.sample(empty_positions, settings.NUMBER_OF_BOMBS)
+        empty_positions = [i for i in range(settings.NUM_TILES) if not self.grid[i].is_bomb]
+        bomb_positions = random.sample(empty_positions, settings.NUM_BOMBS)
         for i in bomb_positions:
             self.grid[i].is_bomb = True
 
@@ -34,7 +34,7 @@ class Board:
         """ Obliczanie liczby min sąsiadujących z każdą komórką. """
         for index, cell in enumerate(self.grid):
             check_up = index > (settings.ROW_SIZE - 1)
-            check_down = index < (settings.NUMBER_OF_TILES - settings.ROW_SIZE)
+            check_down = index < (settings.NUM_TILES - settings.ROW_SIZE)
             check_left = index % settings.ROW_SIZE != 0
             check_right = (index + 1) % settings.ROW_SIZE != 0
 
@@ -64,7 +64,7 @@ class Board:
         """ Odkrywanie pojedynczej komórki planszy. """
         self.grid[index].display_character = str(self.grid[index].adjacent_bombs_counter)
         self.grid[index].is_covered = False
-        self.NUMBER_OF_FREE_TILES -= 1
+        self.num_free_tiles -= 1
 
     def uncover_board(self, index):
         """ Odkrywanie wszystkich komórek sąsiadujących z daną aż do napotkania komórki z miną. """
@@ -75,7 +75,7 @@ class Board:
             return
 
         check_up = index > (settings.ROW_SIZE - 1)
-        check_down = index < (settings.NUMBER_OF_TILES - settings.ROW_SIZE)
+        check_down = index < (settings.NUM_TILES - settings.ROW_SIZE)
         check_left = index % settings.ROW_SIZE != 0
         check_right = (index + 1) % settings.ROW_SIZE != 0
 
@@ -90,15 +90,11 @@ class Board:
 
     def check_cell(self, index):
         """ Sprawdzanie czy komórka zawiera minę. """
-        status = CellState(False, True, False)
-        if self.grid[index].is_bomb:
-            status = status._replace(is_bomb=True)
-        if not self.grid[index].is_covered:
-            status = status._replace(is_covered=False)
+        is_bomb = self.grid[index].is_bomb
+        is_covered = self.grid[index].is_covered
         self.uncover_board(index)
-        if self.NUMBER_OF_FREE_TILES <= 0:
-            status = status._replace(is_board_empty=True)
-        return status
+        is_board_empty = (self.num_free_tiles <= 0)
+        return State(is_bomb=is_bomb, is_covered=is_covered, is_board_empty=is_board_empty)
 
     def display_board(self):
         """ Wyświetlanie planszy do gry. """

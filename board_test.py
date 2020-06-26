@@ -28,7 +28,7 @@ class BoardTest(unittest.TestCase):
 
     def test_is_board_empty(self):
         test_board = board.Board()
-        test_board.NUMBER_OF_FREE_TILES = 0
+        test_board.num_free_tiles = 0
         self.assertTrue(test_board.check_cell(5).is_board_empty)
 
     def test_uncover_board_to_first_mine(self):
@@ -36,8 +36,8 @@ class BoardTest(unittest.TestCase):
         test_board.grid = [board.Cell('-') for _ in range(settings.ROW_SIZE) for _ in range(settings.COLUMN_SIZE)]
 
         bombs = 0
-        for i in range(settings.NUMBER_OF_TILES):
-            if i % 8 == 0 and bombs < settings.NUMBER_OF_BOMBS:
+        for i in range(settings.NUM_TILES):
+            if i % 8 == 0 and bombs < settings.NUM_BOMBS:
                 test_board.grid[i].is_bomb = True
                 bombs += 1
 
@@ -45,7 +45,7 @@ class BoardTest(unittest.TestCase):
         test_board.uncover_board(36)
 
         counter = 0
-        for i in range(settings.NUMBER_OF_TILES):
+        for i in range(settings.NUM_TILES):
             if not test_board.grid[i].is_covered:
                 counter += 1
 
